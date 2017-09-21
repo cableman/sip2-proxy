@@ -1,0 +1,19 @@
+{
+  "name": "sip2-proxy",
+  "version": "1.0.0",
+  "description": "Proxy to log and analyse SIP2 messages for user recommender service",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com/bibboxen/sip2-proxy"
+  },
+  "author": "Jesper Kristensen",
+  "license": "ISC",
+  "dependencies": {
+    "http-proxy": "^1.16.2",
+    "https": "^1.0.0"
+  }
+}
