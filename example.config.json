@@ -1,0 +1,8 @@
+{
+	"port": "443",
+	"target": "proxy target end-point",
+	"ssl": {
+		"key": "server.key",
+  	"crt": "server.crt"
+	}
+}
