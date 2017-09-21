@@ -45,8 +45,9 @@ https.createServer({
 
       // For now log the request to console.
       console.log('RAW request from the target', string.toString('utf8'));
-    })
-}).listen(config.port);
+    });
+  }
+).listen(config.port);
 
 debug('Proxy started at port "' + config.port + '" with target "' + config.target + '"');
 
