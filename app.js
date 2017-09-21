@@ -1,46 +1,62 @@
+/**
+ * SIP2 proxy to capture messages for analyses by recommender service.
+ *
+ */
+'use strict';
+
+var debug = require('debug')('sip2-proxy');
+var fs = require('fs');
+
 var https = require('https');
 var httpProxy = require('http-proxy');
 
-var fs = require('fs');
+// Used to parse the body.
+var getRawBody = require('raw-body');
+var contentType = require('content-type');
 
 // Load config file.
 var config = require(__dirname + '/config.json');
 
-const options = {
-  key: fs.readFileSync('server.key', 'utf8'),
-  cert: fs.readFileSync('server.crt', 'utf8')
-};
-
-// Create a proxy server with custom application logic
+// Create a proxy.
 var proxy = httpProxy.createProxyServer({
-	xfwd: true,
+	xfwd: false,
   changeOrigin: true,
   secure: false
 });
 
-https.createServer(options, function (req, res) {
-  proxy.web(req, res, {
-      target: 'https://linuxdev.dk'
-   });
+// Start HTTPS server to receive requests.
+https.createServer({
+    key: fs.readFileSync(config.ssl.key, 'utf8'),
+    cert: fs.readFileSync(config.ssl.crt, 'utf8')
+  }, function (req, res) {
+    // Proxy the request without delay.
+    proxy.web(req, res, { target: config.target });
 
-  console.log('RAW request from the target', JSON.stringify(req.headers, true, 2));
+    // Parse the request to get the SIP2 messages.
+    getRawBody(req, {
+      length: req.headers['content-length'],
+      limit: '1mb',
+      encoding: contentType.parse(req).parameters.charset
+    }, function (err, string) {
+      if (err) {
+        debug('Body parser error');
+        return
+      }
 
+      // For now log the request to console.
+      console.log('RAW request from the target', string.toString('utf8'));
+    })
 }).listen(config.port);
 
-//
+debug('Proxy started at port "' + config.port + '" with target "' + config.target + '"');
+
 // Listen for the `error` event on `proxy`.
 proxy.on('error', function (err, req, res) {
   res.writeHead(500, {
     'Content-Type': 'text/plain'
   });
 
+  debug('Proxy error', err);
+
   res.end('Something went wrong. And we are reporting a custom error message.');
 });
-
-//
-// Listen for the `proxyRes` event on `proxy`.
-//
-proxy.on('proxyRes', function (proxyRes, req, res) {
-  console.log('RAW Response from the target', JSON.stringify(proxyRes.headers, true, 2));
-});
-

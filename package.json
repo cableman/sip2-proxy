@@ -4,7 +4,8 @@
   "description": "Proxy to log and analyse SIP2 messages for user recommender service",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start-dev": "DEBUG=sip2-proxy* ./node_modules/.bin/nodemon app.js",
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
@@ -13,7 +14,13 @@
   "author": "Jesper Kristensen",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.18.1",
+    "content-type": "^1.0.4",
+    "debug": "^3.0.1",
     "http-proxy": "^1.16.2",
     "https": "^1.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.12.1"
   }
 }
