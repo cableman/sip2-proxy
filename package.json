@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start-dev": "DEBUG=sip2-proxy* ./node_modules/.bin/nodemon app.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "build": "npm install"
   },
   "repository": {
     "type": "git",

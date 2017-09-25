@@ -15,6 +15,6 @@ RUN chown -R app:app $HOME/*
 
 USER app
 WORKDIR $HOME/proxy
-RUN npm install
+RUN npm install --quiet
 
 CMD ["npm", "run", "start-dev"]
