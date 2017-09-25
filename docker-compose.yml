@@ -1,0 +1,7 @@
+proxy:
+  build: .
+  ports:
+    - '443:443'
+  volumes:
+    - .:/home/app/proxy
+    - /home/app/proxy/node_modules

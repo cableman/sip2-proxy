@@ -32,20 +32,23 @@ https.createServer({
     // Proxy the request without delay.
     proxy.web(req, res, { target: config.target });
 
-    // Parse the request to get the SIP2 messages.
-    getRawBody(req, {
-      length: req.headers['content-length'],
-      limit: '1mb',
-      encoding: contentType.parse(req).parameters.charset
-    }, function (err, string) {
-      if (err) {
-        debug('Body parser error');
-        return
-      }
+    // If no content lengt content-type parse will fail.
+    if (req.headers.hasOwnProperty('content-length')) {
+      // Parse the request to get the SIP2 messages.
+      getRawBody(req, {
+        length: req.headers['content-length'],
+        limit: '1mb',
+        encoding: contentType.parse(req).parameters.charset
+      }, function (err, string) {
+        if (err) {
+          debug('Body parser error');
+          return
+        }
 
-      // For now log the request to console.
-      console.log('RAW request from the target', string.toString('utf8'));
-    });
+        // For now log the request to console.
+        console.log('RAW request from the target', string.toString('utf8'));
+      });
+    }
   }
 ).listen(config.port);
 
